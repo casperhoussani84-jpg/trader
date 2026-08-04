@@ -92,7 +92,7 @@
 
     .locks-close-focalimg {
       z-index: 2;
-      clip-path: circle(150px at 326px 240px);
+      clip-path: circle(150px at 304px 552px);
     }
 
     /* light-pulse flash — sells the silent "click" */
@@ -111,12 +111,12 @@
     }
   </style>
 
-  <div id="root" data-composition-id="02-locks-close">
-    <div class="clip locks-close-bg" data-start="0" data-duration="4" data-track-index="0"></div>
+  <div id="root" data-composition-id="02-locks-close" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
+    <div class="clip locks-close-bg" data-start="0" data-duration="4.5" data-track-index="0"></div>
 
-    <div class="clip locks-close-georing" data-start="0" data-duration="4" data-track-index="1"></div>
+    <div class="clip locks-close-georing" data-start="0" data-duration="4.5" data-track-index="1"></div>
 
-    <div class="clip locks-close-cropframe" data-start="0" data-duration="4" data-track-index="2">
+    <div class="clip locks-close-cropframe" data-start="0" data-duration="4.5" data-track-index="2">
       <div class="locks-close-jitter" id="locks-close-jitter">
         <div class="locks-close-zoomouter" id="locks-close-zoomouter">
           <div class="locks-close-zoominner" id="locks-close-zoominner">
@@ -135,13 +135,13 @@
       const tl = gsap.timeline({ paused: true });
 
       // ---- coordinate-target-zoom bake ----
-      // Lock/hinge point measured in the displayed image (1600px-wide render
-      // of the 1201x880 source): fx ≈ 326px, fy ≈ 240px, matching the
+      // Left side-latch measured in the displayed image (1600px-wide render
+      // of the 1201x880 source): fx ≈ 304px, fy ≈ 552px, matching the
       // focal-img clip-path circle above. Viewport is 960x960, center (480,480).
-      const OFFSET_X = 326 - 480; // -154
-      const OFFSET_Y = 240 - 480; // -240
-      const COUNTER_X = -OFFSET_X; // 154
-      const COUNTER_Y = -OFFSET_Y; // 240
+      const OFFSET_X = 304 - 480; // -176
+      const OFFSET_Y = 552 - 480; // 72
+      const COUNTER_X = -OFFSET_X; // 176
+      const COUNTER_Y = -OFFSET_Y; // -72
       const ZOOM_SCALE = 2.0;
       const ZOOM_AT = 0.2;
       const ZOOM_DUR = 1.8; // ends at 2.0s — camera "arrival"
@@ -193,7 +193,7 @@
       tl.to("#locks-close-jitter", { x: -2, y: 2, duration: 0.3, ease: "sine.inOut" }, 3.1);
       tl.to("#locks-close-jitter", { x: 2, y: -3, duration: 0.3, ease: "sine.inOut" }, 3.4);
       tl.to("#locks-close-jitter", { x: -1, y: 1, duration: 0.3, ease: "sine.inOut" }, 3.7);
-      tl.to("#locks-close-jitter", { x: 0, y: 0, duration: 0.2, ease: "sine.inOut" }, 3.9);
+      tl.to("#locks-close-jitter", { x: 0, y: 0, duration: 0.2, ease: "sine.inOut" }, 4.0);
 
       window.__timelines["02-locks-close"] = tl;
     })();

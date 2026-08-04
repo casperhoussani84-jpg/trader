@@ -23,7 +23,7 @@ music: none
 - voiceover: ""
 - duration: 5s
 - transition_in: cut
-- status: outline
+- status: animated
 - src: compositions/frames/01-hero-rotation.html
 - type: product_intro
 - persuasion: Status seeking
@@ -48,7 +48,7 @@ Scene 3 (4.0–5.0s): hold the settled 3/4 angle; at most **subtle jitter** (`si
 - voiceover: ""
 - duration: 4s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/02-locks-close.html
 - type: feature_showcase
 - persuasion: Show-don't-tell proof
@@ -73,7 +73,7 @@ Scene 3 (2.8–4.0s): hold the macro framing; **subtle jitter** only, no further
 - voiceover: ""
 - duration: 5s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/03-fresh-lunch.html
 - type: benefit_highlight
 - persuasion: Future pacing
@@ -98,7 +98,7 @@ Scene 3 (3.8–5.0s): hold the settled, lit frame; **subtle jitter** only.
 - voiceover: ""
 - duration: 3s
 - transition_in: zoom-through
-- status: outline
+- status: animated
 - src: compositions/frames/04-perfect-close.html
 - type: benefit_highlight
 - persuasion: Show-don't-tell proof
@@ -122,7 +122,7 @@ Scene 2 (1.0–3.0s): held climax — box sits centered, still, on the glossy fl
 - voiceover: ""
 - duration: 3s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/05-brand-outro.html
 - type: branding
 - persuasion: Authority by association

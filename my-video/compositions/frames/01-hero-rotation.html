@@ -122,14 +122,14 @@
     }
   </style>
 
-  <div id="root" data-composition-id="01-hero-rotation" data-start="0" data-duration="5" data-width="1080" data-height="1920">
-    <div class="clip frame01-ground" data-start="0" data-duration="5" data-track-index="0"></div>
+  <div id="root" data-composition-id="01-hero-rotation" data-start="0" data-duration="5.5" data-width="1080" data-height="1920">
+    <div class="clip frame01-ground" data-start="0" data-duration="5.5" data-track-index="0"></div>
 
-    <div class="clip frame01-ring" data-start="0" data-duration="5" data-track-index="1" id="frame01-ring"></div>
+    <div class="clip frame01-ring" data-start="0" data-duration="5.5" data-track-index="1" id="frame01-ring"></div>
 
-    <div class="clip frame01-floor-shadow" data-start="0" data-duration="5" data-track-index="2" id="frame01-floor-shadow"></div>
+    <div class="clip frame01-floor-shadow" data-start="0" data-duration="5.5" data-track-index="2" id="frame01-floor-shadow"></div>
 
-    <div class="clip" data-start="0" data-duration="5" data-track-index="3" style="position: absolute; inset: 0;">
+    <div class="clip" data-start="0" data-duration="5.5" data-track-index="3" style="position: absolute; inset: 0;">
       <div class="frame01-product-entrance" id="frame01-product-entrance">
         <div class="frame01-product-tilt" id="frame01-product-tilt">
           <div class="frame01-product-frame">
@@ -209,7 +209,7 @@
         { x: 900, opacity: 0.32, duration: SWEEP_DUR, ease: "none" },
         SWEEP_START,
       );
-      tl.to("#frame01-sweep", { opacity: 0, duration: 0.3, ease: "power1.in" }, SWEEP_START + SWEEP_DUR - 0.3);
+      tl.to("#frame01-sweep", { opacity: 0, duration: 0.3, ease: "power1.in" }, SWEEP_START + SWEEP_DUR);
 
       // ── Scene 3 (4.0–5.0s): hold the settled 3/4 angle — subtle jitter only, no further push ──
       tl.to(
