@@ -1,0 +1,154 @@
+<template>
+  <style>
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+    }
+
+    .brandoutro-bg {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+    }
+
+    .brandoutro-ring {
+      position: absolute;
+      left: 50%;
+      top: 760px;
+      width: 760px;
+      height: 760px;
+      margin-left: -380px;
+      margin-top: -380px;
+      border-radius: 50%;
+      border: 1px solid #c9a227;
+      opacity: 0;
+    }
+
+    .brandoutro-ring::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      border: 1px dashed #c9a227;
+      opacity: 0.7;
+    }
+
+    .brandoutro-cluster {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brandoutro-logo {
+      display: block;
+      width: 480px;
+      height: auto;
+      opacity: 0;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .brandoutro-tagline {
+      margin-top: 56px;
+      display: flex;
+      gap: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 46px;
+      line-height: 1.1;
+      color: #2b2b2b;
+      letter-spacing: 0.5px;
+    }
+
+    .brandoutro-word {
+      opacity: 0;
+      will-change: transform;
+    }
+
+    .brandoutro-accent {
+      margin-top: 40px;
+      width: 140px;
+      height: 2px;
+      background: #2b2b2b;
+      opacity: 0;
+      transform-origin: 50% 50%;
+    }
+  </style>
+
+  <div id="root" data-composition-id="05-brand-outro" data-start="0" data-duration="3" data-width="1080" data-height="1920">
+    <div class="brandoutro-bg clip" data-start="0" data-duration="3" data-track-index="0"></div>
+
+    <div class="brandoutro-ring clip" data-start="0" data-duration="3" data-track-index="1"></div>
+
+    <div class="brandoutro-cluster clip" data-start="0" data-duration="3" data-track-index="2">
+      <img class="brandoutro-logo" id="brandoutro-logo" src="assets/images/product-02.png" alt="PHOENIX PLAST logo" />
+      <div class="brandoutro-tagline" id="brandoutro-tagline">
+        <span class="brandoutro-word" id="brandoutro-word-1">Premium</span>
+        <span class="brandoutro-word" id="brandoutro-word-2">Lunch&nbsp;Box</span>
+      </div>
+      <div class="brandoutro-accent" id="brandoutro-accent"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // Scene 1 (0.0-1.0s): geo-ring settles faintly behind, logo pops in with a smooth
+      // long-tail settle (spring-pop-entrance) — no overshoot, hero visible by t<=0.5s.
+      tl.fromTo(
+        "#root .brandoutro-ring",
+        { opacity: 0 },
+        { opacity: 0.28, duration: 0.9, ease: "power2.out" },
+        0
+      );
+
+      tl.fromTo(
+        "#brandoutro-logo",
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0.1
+      );
+
+      // Scene 2 (1.0-2.0s): "Premium Lunch Box" reveals via per-word staggered reveal,
+      // two words, one beat each (dynamic-content-sequencing pacing).
+      tl.fromTo(
+        "#brandoutro-word-1",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" },
+        1.0
+      );
+
+      tl.fromTo(
+        "#brandoutro-word-2",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" },
+        1.5
+      );
+
+      tl.fromTo(
+        "#brandoutro-accent",
+        { opacity: 0, scaleX: 0 },
+        { opacity: 1, scaleX: 1, duration: 0.4, ease: "power3.out" },
+        1.95
+      );
+
+      // Scene 3 (2.0-3.0s): final frame — hold the completed lockup with only a
+      // subtle, explicit (non-looping) jitter, settling back to rest by t=3.0.
+      tl.to("#brandoutro-logo", { x: 2, rotation: 0.3, duration: 0.25, ease: "sine.inOut" }, 2.0)
+        .to("#brandoutro-logo", { x: -2, rotation: -0.3, duration: 0.25, ease: "sine.inOut" }, 2.25)
+        .to("#brandoutro-logo", { x: 1, rotation: 0.15, duration: 0.25, ease: "sine.inOut" }, 2.5)
+        .to("#brandoutro-logo", { x: 0, rotation: 0, duration: 0.25, ease: "sine.inOut" }, 2.75);
+
+      window.__timelines["05-brand-outro"] = tl;
+    })();
+  </script>
+</template>
