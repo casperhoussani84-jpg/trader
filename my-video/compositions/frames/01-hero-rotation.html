@@ -1,0 +1,224 @@
+<template data-composition-id="01-hero-rotation">
+  <style>
+    #root {
+      width: 1080px;
+      height: 1920px;
+      position: relative;
+      overflow: hidden;
+      container-type: size;
+    }
+
+    /* full-bleed ground — lives on a class="clip" layer, never on #root itself */
+    .frame01-ground {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+    }
+
+    /* compass-drafted geo ring, faint atmosphere behind the hero (frame.md: 1-2 rings, 20-50% opacity) */
+    .frame01-ring {
+      position: absolute;
+      top: 40cqh;
+      left: 50%;
+      width: 92cqw;
+      height: 92cqw;
+      border-radius: 50%;
+      border: 1px solid #c9a227;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+    .frame01-ring::before {
+      content: "";
+      position: absolute;
+      inset: 13%;
+      border-radius: 50%;
+      border: 1px dashed #c9a227;
+      opacity: 0.6;
+    }
+
+    /* soft radial floor-shadow — glossy studio floor read, sits under the box */
+    .frame01-floor-shadow {
+      position: absolute;
+      top: 55.5cqh;
+      left: 50%;
+      width: 48cqw;
+      height: 8cqh;
+      transform: translate(-50%, -50%) scaleX(0.85);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(43, 43, 43, 0.22) 0%, rgba(43, 43, 43, 0.10) 45%, rgba(43, 43, 43, 0) 75%);
+      opacity: 0;
+    }
+
+    /* the product's own display rect — this is what enters + tilts */
+    .frame01-product-entrance {
+      position: absolute;
+      top: 40cqh;
+      left: 50%;
+      width: 62cqw;
+      height: 62cqw;
+      transform: translate(-50%, -50%) scale(0);
+      transform-origin: 50% 50%;
+      opacity: 0;
+      perspective: 1400px;
+    }
+
+    .frame01-product-tilt {
+      width: 100%;
+      height: 100%;
+      transform-origin: 50% 62%;
+      will-change: transform;
+    }
+
+    .frame01-product-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .frame01-product-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ambient-glow-bloom, Form B: traveling specular sweep clipped to the shell */
+    .frame01-specular-clip {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .frame01-sweep {
+      position: absolute;
+      top: -25%;
+      left: 0;
+      width: 90px;
+      height: 150%;
+      background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.85) 48%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      mix-blend-mode: screen;
+      transform: rotate(14deg) translateX(-320px);
+      opacity: 0;
+    }
+
+    /* faint top-key highlight — foreground studio light read, above the product */
+    .frame01-top-key {
+      position: absolute;
+      top: 22cqh;
+      left: 50%;
+      width: 52cqw;
+      height: 22cqh;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.35) 45%, rgba(255, 255, 255, 0) 78%);
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+
+  <div id="root" data-composition-id="01-hero-rotation" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+    <div class="clip frame01-ground" data-start="0" data-duration="5" data-track-index="0"></div>
+
+    <div class="clip frame01-ring" data-start="0" data-duration="5" data-track-index="1" id="frame01-ring"></div>
+
+    <div class="clip frame01-floor-shadow" data-start="0" data-duration="5" data-track-index="2" id="frame01-floor-shadow"></div>
+
+    <div class="clip" data-start="0" data-duration="5" data-track-index="3" style="position: absolute; inset: 0;">
+      <div class="frame01-product-entrance" id="frame01-product-entrance">
+        <div class="frame01-product-tilt" id="frame01-product-tilt">
+          <div class="frame01-product-frame">
+            <img class="frame01-product-img" src="assets/images/product-04.jpeg" alt="" />
+            <div class="frame01-specular-clip">
+              <div class="frame01-sweep" id="frame01-sweep"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame01-top-key" id="frame01-top-key"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // ── Scene 1 (0.0–1.5s): spring-pop-entrance — smooth long-tail settle, no overshoot ──
+      var ENTRY_AT = 0.1;
+      var POP_DUR = 0.65; // settles ~0.75s — well inside the t <= 0.5s "hero visible" read as opacity ramps
+
+      tl.fromTo(
+        "#frame01-product-entrance",
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: POP_DUR, ease: "power3.out" },
+        ENTRY_AT,
+      );
+
+      // floor-shadow lands in the same beat as the box — one arriving read, not two events
+      tl.fromTo(
+        "#frame01-floor-shadow",
+        { opacity: 0, scaleX: 0.7 },
+        { opacity: 1, scaleX: 0.85, duration: POP_DUR + 0.15, ease: "power2.out" },
+        ENTRY_AT,
+      );
+
+      // faint top-key studio highlight, foreground — fades in with the settle
+      tl.fromTo(
+        "#frame01-top-key",
+        { opacity: 0 },
+        { opacity: 0.22, duration: POP_DUR + 0.2, ease: "power2.out" },
+        ENTRY_AT + 0.05,
+      );
+
+      // compass ring atmosphere — quiet, present by the time the box lands
+      tl.fromTo(
+        "#frame01-ring",
+        { opacity: 0, scale: 0.95 },
+        { opacity: 0.22, scale: 1, duration: 1.1, ease: "power2.out" },
+        0.1,
+      );
+
+      // ── Scene 2 (1.5–4.0s): multi-phase-camera vocabulary — phase-stepped 3D tilt + jitter, ONE writer ──
+      var tiltEl = document.getElementById("frame01-product-tilt");
+      var tiltPhase = { ry: 0, rx: 0, jphase: 0 };
+      var JITTER_RY_AMP = 0.5; // deg — subtle, sine-wave-loop low end
+      var JITTER_RX_AMP = 0.25;
+
+      function writeTilt() {
+        var s = Math.sin(tiltPhase.jphase);
+        var ry = tiltPhase.ry + s * JITTER_RY_AMP;
+        var rx = tiltPhase.rx + s * JITTER_RX_AMP;
+        tiltEl.style.transform = "rotateY(" + ry.toFixed(3) + "deg) rotateX(" + rx.toFixed(3) + "deg)";
+      }
+
+      // phase step — one direction only, settling by 3.5s
+      tl.to(tiltPhase, { ry: 7, rx: -3, duration: 2.0, ease: "power3.out", onUpdate: writeTilt }, 1.5);
+
+      // specular sweep — ambient-glow-bloom Form B, one deliberate pass, clipped to the shell
+      var SWEEP_START = 2.0;
+      var SWEEP_DUR = 1.1;
+      tl.fromTo(
+        "#frame01-sweep",
+        { x: -320, opacity: 0 },
+        { x: 900, opacity: 0.32, duration: SWEEP_DUR, ease: "none" },
+        SWEEP_START,
+      );
+      tl.to("#frame01-sweep", { opacity: 0, duration: 0.3, ease: "power1.in" }, SWEEP_START + SWEEP_DUR - 0.3);
+
+      // ── Scene 3 (4.0–5.0s): hold the settled 3/4 angle — subtle jitter only, no further push ──
+      tl.to(
+        tiltPhase,
+        { jphase: Math.PI * 2 * 0.5, duration: 1.0, ease: "none", onUpdate: writeTilt },
+        4.0,
+      );
+
+      window.__timelines["01-hero-rotation"] = tl;
+    })();
+  </script>
+</template>

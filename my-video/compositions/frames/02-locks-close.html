@@ -1,0 +1,201 @@
+<template data-composition-id="02-locks-close">
+  <style>
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    /* full-bleed ground — never painted on #root itself */
+    .locks-close-bg {
+      position: absolute;
+      inset: 0;
+      background: #FFFFFF;
+    }
+
+    /* compass-drafted atmosphere ring, concentric with the macro viewport */
+    .locks-close-georing {
+      position: absolute;
+      left: -60px;
+      top: 260px;
+      width: 1200px;
+      height: 1200px;
+      border-radius: 50%;
+      border: 1px solid #C9A227;
+      opacity: 0.22;
+    }
+    .locks-close-georing::before {
+      content: "";
+      position: absolute;
+      inset: 150px;
+      border-radius: 50%;
+      border: 1px dashed #C9A227;
+      opacity: 0.85;
+    }
+
+    /* macro viewport — hairline "card" framing, hard-clips the zoom */
+    .locks-close-cropframe {
+      position: absolute;
+      left: 60px;
+      top: 380px;
+      width: 960px;
+      height: 960px;
+      overflow: hidden;
+      background: #F3E7C0;
+      border: 1px solid #C9A227;
+    }
+
+    /* jitter wrapper — Scene 3 holds the frame, tiny settle-motion only */
+    .locks-close-jitter {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+    }
+
+    /* coordinate-target-zoom: outer scales */
+    .locks-close-zoomouter {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+    /* coordinate-target-zoom: inner translates */
+    .locks-close-zoominner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .locks-close-ctximg,
+    .locks-close-focalimg {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 1600px;
+      height: auto;
+      display: block;
+      max-width: none;
+    }
+
+    .locks-close-ctximg {
+      --dof: 0px;
+      filter: blur(var(--dof));
+      opacity: 1;
+      will-change: filter, opacity;
+      z-index: 1;
+    }
+
+    .locks-close-focalimg {
+      z-index: 2;
+      clip-path: circle(150px at 326px 240px);
+    }
+
+    /* light-pulse flash — sells the silent "click" */
+    .locks-close-pulse {
+      position: absolute;
+      left: 370px;
+      top: 370px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232, 199, 102, 0.95) 0%, rgba(232, 199, 102, 0.35) 45%, rgba(232, 199, 102, 0) 72%);
+      opacity: 0;
+      transform-origin: 50% 50%;
+      pointer-events: none;
+      z-index: 3;
+    }
+  </style>
+
+  <div id="root" data-composition-id="02-locks-close">
+    <div class="clip locks-close-bg" data-start="0" data-duration="4" data-track-index="0"></div>
+
+    <div class="clip locks-close-georing" data-start="0" data-duration="4" data-track-index="1"></div>
+
+    <div class="clip locks-close-cropframe" data-start="0" data-duration="4" data-track-index="2">
+      <div class="locks-close-jitter" id="locks-close-jitter">
+        <div class="locks-close-zoomouter" id="locks-close-zoomouter">
+          <div class="locks-close-zoominner" id="locks-close-zoominner">
+            <img class="locks-close-ctximg" id="locks-close-ctximg" src="assets/images/product-01.jpeg" alt="" />
+            <img class="locks-close-focalimg" id="locks-close-focalimg" src="assets/images/product-01.jpeg" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="locks-close-pulse" id="locks-close-pulse"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- coordinate-target-zoom bake ----
+      // Lock/hinge point measured in the displayed image (1600px-wide render
+      // of the 1201x880 source): fx ≈ 326px, fy ≈ 240px, matching the
+      // focal-img clip-path circle above. Viewport is 960x960, center (480,480).
+      const OFFSET_X = 326 - 480; // -154
+      const OFFSET_Y = 240 - 480; // -240
+      const COUNTER_X = -OFFSET_X; // 154
+      const COUNTER_Y = -OFFSET_Y; // 240
+      const ZOOM_SCALE = 2.0;
+      const ZOOM_AT = 0.2;
+      const ZOOM_DUR = 1.8; // ends at 2.0s — camera "arrival"
+
+      // Scene 1 → Scene 2: one continuous push toward the latch, never a
+      // stop-start jump. Scale (outer) + counter-translate (inner) share
+      // position, duration and ease so the target never wanders mid-zoom.
+      tl.fromTo(
+        "#locks-close-zoomouter",
+        { scale: 1 },
+        { scale: ZOOM_SCALE, duration: ZOOM_DUR, ease: "power3.inOut" },
+        ZOOM_AT
+      );
+      tl.fromTo(
+        "#locks-close-zoominner",
+        { x: 0, y: 0 },
+        { x: COUNTER_X, y: COUNTER_Y, duration: ZOOM_DUR, ease: "power3.inOut" },
+        ZOOM_AT
+      );
+
+      // Scene 1: rest of the tray falls into soft depth-of-field blur while
+      // the lock stays the one sharp thing — riding the same push window.
+      tl.fromTo(
+        "#locks-close-ctximg",
+        { "--dof": "0px", opacity: 1 },
+        { "--dof": "14px", opacity: 0.55, duration: ZOOM_DUR, ease: "power2.inOut" },
+        ZOOM_AT
+      );
+
+      // Scene 2: on arrival at the latch, one bright light-pulse — not a
+      // strobe. Fast attack (spring-pop-entrance, no overshoot), quick decay.
+      const ARRIVE_AT = ZOOM_AT + ZOOM_DUR; // 2.0s
+      tl.fromTo(
+        "#locks-close-pulse",
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.22, ease: "expo.out" },
+        ARRIVE_AT
+      );
+      tl.to(
+        "#locks-close-pulse",
+        { scale: 1.4, opacity: 0, duration: 0.4, ease: "power2.out" },
+        ARRIVE_AT + 0.22
+      );
+
+      // Scene 3 (2.8–4.0s): hold the macro framing — subtle jitter only,
+      // no further push. Finite, hand-keyed steps (no repeat/yoyo) settling
+      // back to rest before the frame ends.
+      tl.to("#locks-close-jitter", { x: 3, y: -2, duration: 0.3, ease: "sine.inOut" }, 2.8);
+      tl.to("#locks-close-jitter", { x: -2, y: 2, duration: 0.3, ease: "sine.inOut" }, 3.1);
+      tl.to("#locks-close-jitter", { x: 2, y: -3, duration: 0.3, ease: "sine.inOut" }, 3.4);
+      tl.to("#locks-close-jitter", { x: -1, y: 1, duration: 0.3, ease: "sine.inOut" }, 3.7);
+      tl.to("#locks-close-jitter", { x: 0, y: 0, duration: 0.2, ease: "sine.inOut" }, 3.9);
+
+      window.__timelines["02-locks-close"] = tl;
+    })();
+  </script>
+</template>
